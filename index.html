@@ -34,7 +34,7 @@
     .input-field {
       width: 100%;
       padding: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 15px; /* Gap Increased */
       border: 1px solid #ccc;
       border-radius: 5px;
     }
@@ -50,6 +50,10 @@
     }
     .btn:hover {
       background-color: #005a9e;
+    }
+    .btn:disabled {
+      background-color: #999;
+      cursor: not-allowed;
     }
     .error {
       color: red;
@@ -70,11 +74,12 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" class="logo" alt="Microsoft Logo" />
     <h2>Case ID Verification</h2>
     <p>Please enter the case ID provided by your Microsoft technician:</p>
-    <input type="text" id="caseId" class="input-field" placeholder="Enter Case ID" aria-describedby="caseIdHelp" />
+    <input type="text" id="caseId" class="input-field" placeholder="Enter Case ID" aria-describedby="caseIdHelp" onkeypress="handleKeyPress(event)"/>
     <small id="caseIdHelp" class="form-text text-muted">
       Enter your 6-digit case ID as provided by your technician.
     </small>
-    <button class="btn" onclick="verifyCaseId()">Continue</button>
+    <br><br> <!-- Added extra space -->
+    <button class="btn" id="verifyBtn" onclick="verifyCaseId()">Continue</button>
     <p class="error" id="errorMessage"></p>
     <p class="loading" id="loadingMessage">Verifying...</p>
   </div>
@@ -86,21 +91,29 @@
       var caseId = document.getElementById("caseId").value.trim();
       var errorMessage = document.getElementById("errorMessage");
       var loadingMessage = document.getElementById("loadingMessage");
+      var verifyBtn = document.getElementById("verifyBtn");
 
       errorMessage.textContent = "";
       loadingMessage.style.display = "block";
+      verifyBtn.disabled = true;
 
       // Simulate a server verification delay
       setTimeout(function () {
         loadingMessage.style.display = "none";
-        var regex = /^\d{6}$/;
-        if (regex.test(caseId)) {
+        verifyBtn.disabled = false;
+        if (caseId === "885608") {
           alert("Verification successful! Redirecting to your case details.");
           window.location.href = "case-details.html";
         } else {
-          errorMessage.textContent = "Invalid case ID format. Please check your input.";
+          errorMessage.textContent = "Invalid case ID. Please check your input.";
         }
       }, 2000);
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        verifyCaseId();
+      }
     }
   </script>
 </body>
